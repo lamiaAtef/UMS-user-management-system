@@ -6,7 +6,7 @@ type UserData = {
   firstName: string;
   lastName: string;
   email: string;
-  age: numb;
+  age: number;
   birthDate: string;
   phone: string;
   image: string;
@@ -20,22 +20,20 @@ type UserContextType = {
 export const UserContext = createContext<UserContextType | null>(null);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
+  
+  
   const [userData, setUserData] = useState<UserData | null>(null);
-
+  
   const saveUserData = () => {
     console.log("saveUserData");
     let encodedToken = localStorage.getItem("userToken");
-
     if (encodedToken) {
       const decodedToken: any = jwtDecode(encodedToken);
       console.log(decodedToken);
-
-      // لو عايزة تحفظي الداتا في الـ state
       setUserData(decodedToken);
-
-      console.log("✅ Context شغال تمام");
+      console.log(" Context شغال تمام");
     } else {
-      console.log("⚠️ مفيش userToken في localStorage");
+      console.log(" مفيش userToken في localStorage");
     }
   };
 

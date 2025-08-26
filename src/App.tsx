@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
@@ -12,8 +12,16 @@ import Profile from './Components/Profile/Profile'
 import NotFound from './Components/NotFound/NotFound'
 import { ToastContainer } from 'react-toastify'
 import MUI from './Components/MUI/MUI'
+import { UserContext } from './Context/UserContext'
 
 function App() {
+const {saveUserData} = useContext(UserContext);
+  
+useEffect(() => {
+    localStorage.getItem("userToken") !== null ? saveUserData() : null
+  }, [])
+
+
   const routes = createBrowserRouter([
     {
       path:"",

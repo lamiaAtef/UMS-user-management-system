@@ -6,9 +6,16 @@ import { toast } from 'react-toastify';
 
 export default function AddUpdateForm(props) {
     let navigate = useNavigate();
+    let [isBtnDisabled,setIsBtnDisabled] = useState(true)
     let{title,user}=props;
     const [currentuser, setcurrentuser] = useState(user);
     const [isProfileMode, setIsProfileMode] = useState(true); // true = readOnly mode
+    function formatDateForInput(dateString?: string) {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return ""; // لو التاريخ invalid
+        return date.toISOString().split("T")[0];
+      }
 
 
     useEffect(() => {
@@ -25,13 +32,20 @@ export default function AddUpdateForm(props) {
     }
   }, [title]);
 
+    useEffect(()=>{
+      // setIsBtnDisabled(true)
+      console.log(isBtnDisabled,"setIsBtnDisabled")
+
+    },[isBtnDisabled])
+
     useEffect(() => {
           setcurrentuser(user);  
         }, [user]);
 
         let{register,
             handleSubmit,
-            formState:{errors}
+            formState:{errors},
+            reset
             }=useForm({defaultValues: user});
         
 
@@ -84,6 +98,14 @@ export default function AddUpdateForm(props) {
 
 
     }
+  useEffect(() => {
+  if (user) {
+    reset({
+      ...user,
+      birthDate: formatDateForInput(user.birthDate), // نضمن التاريخ يبقى بصيغة صحيحة
+    });
+  }
+}, [user, reset]);
    
   return (
   
@@ -95,28 +117,39 @@ export default function AddUpdateForm(props) {
       <form action="" className='shadow-lg p-5 m-5' onSubmit={handleSubmit(onSubmit)}>
         <div className="row my-4">
             <div className="col-md-6">
-                <label >first Name</label>
-                <input className='form-control'
+                <label htmlFor="firstName">firstName</label>
+                <input id="firstName" className='form-control'
                  type="text" 
                  placeholder='Enter your first Name'
                 readOnly={isProfileMode}  
-                onChange={(e) => setcurrentuser({...user, firstName: e.target.value})}
+              
 
-                {...register("firstName",{required:"First Name is required !",
-                    pattern:{value:/^[A-Za-z]{2,}$/,message:"enter char only , at least 3 char"}
-                })}/>
+
+              
+              {...register("firstName",{required:"First Name is required !",
+                    pattern:{value:/^[A-Za-z]{2,}$/,message:"enter char only , at least 3 char"},
+                     onChange:(e) => {
+              setcurrentuser({ ...user, firstName: e.target.value });
+              setIsBtnDisabled(false);
+            }}
+                )}/>
                 {errors.firstName&&<span className='text-danger'>{errors.firstName.message}</span>}
             </div>
              <div className="col-md-6">
-                <label >last Name</label>
-                <input  className='form-control'
+                <label htmlFor="lastName" >lastName</label>
+                <input  id="lastName"className='form-control'
                 readOnly={isProfileMode}  
                  type="text" 
                   placeholder='Enter your last Name' 
-                onChange={(e) => setcurrentuser({...user, lastName: e.target.value})}
+               
+
                 {...register("lastName",{required:"Last name is required !",
-                 pattern:{value:/^[A-Za-z]{2,}$/,message:"enter char only , at least 3 char"}
-                    
+                 pattern:{value:/^[A-Za-z]{2,}$/,message:"enter char only , at least 3 char"},
+                onChange:(e) => {
+              setcurrentuser({ ...user, lastName: e.target.value });
+              console.log(currentuser,"setcurrentuser")
+              setIsBtnDisabled(false);
+            } 
                 })}
                 />
                 {errors.lastName && <span className='text-danger'>{errors.lastName.message}</span>}
@@ -124,31 +157,39 @@ export default function AddUpdateForm(props) {
         </div>
          <div className="row my-4">
             <div className="col-md-6">
-                <label >email</label>
-                <input className='form-control' type="text" placeholder='Enter your email'
+                <label htmlFor="email" >email</label>
+                <input  id="email" className='form-control' type="text" placeholder='Enter your email'
                   readOnly={isProfileMode}  
-                 onChange={(e) => setcurrentuser({...user, email: e.target.value})}
+                 
 
                 {...register("email",{
                     required:"email is required !",
                     pattern:{
                     value : /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message:"email should be valid"
+                    message:"email should be valid",
 
                  },
+                  onChange:(e) => {
+                                setcurrentuser({ ...user, email: e.target.value });
+                                setIsBtnDisabled(false);
+                              }
                 })}
                 />
                 {errors.email && <span className='text-danger'>{errors.email.message}</span>}
             </div>
              <div className="col-md-6">
-                <label >Age</label>
-                <input  className='form-control' type="number"  placeholder='Enter your Age'
+                <label htmlFor="Age" >Age</label>
+                <input  id="Age" className='form-control' type="number"  placeholder='Enter your Age'
                   readOnly={isProfileMode}  
-                 onChange={(e) => setcurrentuser({...user, age: e.target.value})}
+                
 
                 {...register("age",{required:"Age is required !",
                     max:{value:50,message:"your age should be less than or equal 50"},
-                    min:{value:20,message:"your age should be greater than or equal 20"}})}
+                    min:{value:20,message:"your age should be greater than or equal 20"},
+                    onChange:(e) => {
+                                setcurrentuser({ ...user, Age: e.target.value });
+                                setIsBtnDisabled(false);
+                              }})}
                 />
                 {errors.age&&<span className='text-danger'>{errors.age.message}</span>}
                  
@@ -156,29 +197,40 @@ export default function AddUpdateForm(props) {
         </div>
          <div className="row my-4">
             <div className="col-md-6">
-                <label >phone Number</label>
-                <input className='form-control' type="text"placeholder='Enter your phone Number'
+                <label htmlFor="phone" >phone Number</label>
+                <input  id="phone" className='form-control' type="text"placeholder='Enter your phone Number'
                  readOnly={isProfileMode}  
-                onChange={(e) => setcurrentuser({...user, phone: e.target.value})}
+                
 
-                {...register("phone",{required:"phone is required" 
-                   })}
+
+                {...register("phone",{required:"phone is required" ,
+                   onChange:(e) => {
+              setcurrentuser({ ...user, phone: e.target.value });
+              setIsBtnDisabled(false);
+            }
+                   })
+                  }
                 />
                 {errors.phone&&<span className='text-danger'> {errors.phone.message}</span>}
             </div>
              <div className="col-md-6">
-                <label >Birthdate</label>
-                <input  className='form-control' type="text"  placeholder='Enter your BirthDate'
+                <label  htmlFor="BD">Birthdate</label>
+                <input id="BD" className='form-control' type="date"  placeholder='Enter your BirthDate'
                  readOnly={isProfileMode}  
-                onChange={(e) => setcurrentuser({...user, Birthdate: e.target.value})}
+               
 
-                {...register("birthDate",{required:"birthDate is required !"})}
-                />
+                {...register("birthDate",{required:"birthDate is required !",
+                   onChange:(e) => {
+                              setcurrentuser({ ...user, birthDate: e.target.value });
+                              setIsBtnDisabled(false);
+                            }
+                })}
+                defaultValue={formatDateForInput(user?.birthDate)}                />
                 {errors.birthDate&&<span className='text-danger'>{errors.birthDate.message}</span>}
             </div>
         </div>
         <div className='text-center'>
-            <button className='w-50 btn btn-warning text-white mx-auto' disabled={isProfileMode} > Save </button>
+            <button className='w-50 btn btn-warning text-white mx-auto' disabled={isProfileMode || isBtnDisabled} > Save </button>
         </div>
       </form>
 

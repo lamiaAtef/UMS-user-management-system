@@ -50,9 +50,9 @@ export default function Login() {
               </h5>
             </div>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="form-group my-5">
-                  <label >user Name</label>
-                  <input type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username"
+                <div className="form-group my-3">
+                  <label htmlFor="userName" >user Name</label>
+                  <input id="userName" type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username"
 
                   {...register("username",{required:"user name is requird!"})}
                   />
@@ -61,10 +61,10 @@ export default function Login() {
                 
                 </div>
                 <div className="form-group">
-                  <label >Password</label>
-                  <input type="text" className="form-control" id="exampleInputPassword1" placeholder="Password"
+                  <label htmlFor="password">Password</label>
+                  <input id="password" type="text" className="form-control" id="exampleInputPassword1" placeholder="Password"
 
-                  {...register("password",{required:"password is req!"})}
+                  {...register("password",{required:"password is required!"})}
                   />
                   {errors.password && <span className='text-danger'>{errors.password.message}</span>}
                 </div>

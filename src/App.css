@@ -13,6 +13,11 @@
 
 }
 .ps-menu-button:hover{
-    background-color: #FEAF00 !important;
-    color: white !important;
+    /* background-color: #FEAF00 !important; */
+    color:#FEAF00 !important;
+}
+/* بدل :active */
+.ps-menu-button.active {
+  color: #FEAF00 !important;
+  border-radius: 8px;
 }
