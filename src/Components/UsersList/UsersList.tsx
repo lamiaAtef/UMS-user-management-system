@@ -1,11 +1,11 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import Table from 'react-bootstrap/Table';
 import { CiEdit } from 'react-icons/ci';
 import { FaTrash } from 'react-icons/fa';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import Pagination from '../pagination/Pagination';
+import Pagination from "../pagination/Pagination"
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
@@ -60,29 +60,26 @@ export default function UsersList() {
 
     let deleteUser = async () =>{
       try{
-        let response = await axios.delete(`https://dummyjson.com/users/${userId}`)
+         await axios.delete(`https://dummyjson.com/users/${userId}`)
         handleClose();
         toast.success(`${userId } is deleted`);
 
 
       }
       catch(error){
-        console.log(error)
         toast.error(userId+"sorry can't delete this user")
 
       }
 
     }
-    let updateData = ()=>{
-      
-    }
+   
     //pagination start
       const usersPerPage = 7;
       const [currentPage, setCurrentPage] = useState(1);
       const indexOfLastUser = currentPage * usersPerPage;
       const indexOfFirstUser = indexOfLastUser- usersPerPage;
       const currentUser = users.slice(indexOfFirstUser, indexOfLastUser);
-      const handlePagination = (pageNumber)=>{setCurrentPage(pageNumber)}
+      const handlePagination = (pageNumber:number)=>{setCurrentPage(pageNumber)}
 
     // pagination end
   

@@ -1,17 +1,21 @@
-import React, { useContext, useState } from 'react';
+import  { useContext, useState } from 'react';
 import { AiOutlineProfile } from 'react-icons/ai';
 import { IoHome } from 'react-icons/io5';
 import { LuUsers } from 'react-icons/lu';
 import { TiUserAddOutline } from 'react-icons/ti';
 import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { UserContext } from '../../Context/UserContext';
 
 export default function SideBar() {
   const [collapsed, setCollapsed] = useState(false);
-  const [active, setActive] = useState('Home'); // 👈 خليه ثابت بالأسماء نفسها
-  const { userData } = useContext(UserContext);
+  const {pathname}=useLocation();
+  console.log(pathname)
+
+  const [active, setActive] = useState(pathname.split("/").at(-1));
+  console.log(active,"active")
+  const { userData } = useContext(UserContext)!;
 
   const toggleCollapse = () => setCollapsed(prev => !prev);
 
@@ -24,16 +28,20 @@ export default function SideBar() {
         }
 
         <div className="text-center">
-          <img src={userData.image} alt="" className="rounded-circle my-3 w-50" />
-          <h5>{userData.firstName}{userData.lastName}</h5>
+          <img
+            src={userData?.image || "/default-avatar.png"} // ✅ fallback صورة افتراضية
+            alt={userData?.firstName || "Guest"}
+            className="rounded-circle my-3 w-50"
+          />
+          <h5>
+            {userData ? `${userData.firstName} ${userData.lastName}` : "Guest"}
+          </h5>
           <h6 className="text-warning">Admin</h6>
         </div>
 
-        {/* 🎯 هنا السحر: نلوّن الـ item الـ active */}
         <Menu
           menuItemStyles={{
             button: ({ active: isActive }) => ({
-              // backgroundColor: isActive ? '#1976d2' : 'transparent',
               backgroundColor: isActive ? '#FEAF00' : 'transparent',
               color: isActive ? '#fff' : undefined,
               borderRadius: 8,
@@ -46,8 +54,8 @@ export default function SideBar() {
         >
           <MenuItem
             icon={<IoHome />}
-            active={active === 'Home'}
-            onClick={() => setActive('Home')}
+            active={active === 'dashboard'}
+            onClick={() => setActive('dashboard')}
             component={<Link to="/dashboard" />}
           >
             Home
@@ -55,8 +63,8 @@ export default function SideBar() {
 
           <MenuItem
             icon={<LuUsers />}
-            active={active === 'Users'}
-            onClick={() => setActive('Users')}
+            active={active === 'userlist'}
+            onClick={() => setActive('userlist')}
             component={<Link to="/dashboard/userlist" />}
           >
             Users
@@ -64,8 +72,8 @@ export default function SideBar() {
 
           <MenuItem
             icon={<TiUserAddOutline />}
-            active={active === 'AddUser'}
-            onClick={() => setActive('AddUser')}
+            active={active === 'userData'}
+            onClick={() => setActive('userData')}
             component={
               <Link to="/dashboard/userData" state={{ action: 'add User', userData: null }} />
             }
@@ -75,8 +83,8 @@ export default function SideBar() {
 
           <MenuItem
             icon={<AiOutlineProfile />}
-            active={active === 'Profile'}
-            onClick={() => setActive('Profile')}
+            active={active === 'profile'}
+            onClick={() => setActive('profile')}
             component={
               <Link to="/dashboard/profile" state={{ action: 'profile', userData: null }} />
             }

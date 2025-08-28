@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode } from "react";
+import  { createContext, useState, type ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 
 type UserData = {
@@ -17,19 +17,31 @@ type UserContextType = {
   saveUserData: () => void;
 };
 
-export const UserContext = createContext<UserContextType | null>(null);
+export const UserContext = createContext<UserContextType>({
+  userData: null,
+  saveUserData: () => {}
+});
+
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   
   
-  const [userData, setUserData] = useState<UserData | null>(null);
-  
-  const saveUserData = () => {
-    console.log("saveUserData");
+  const [userData, setUserData] = useState<UserData | null>(() => {
+  let encodedToken = localStorage.getItem("userToken");
+  if (encodedToken) {
+    try {
+      return jwtDecode<UserData>(encodedToken);
+    } catch (e) {
+      console.error("Invalid token", e);
+      return null;
+    }
+  }
+  return null;
+});
+   const saveUserData = () => {
     let encodedToken = localStorage.getItem("userToken");
     if (encodedToken) {
       const decodedToken: any = jwtDecode(encodedToken);
-      console.log(decodedToken);
       setUserData(decodedToken);
       console.log(" Context شغال تمام");
     } else {

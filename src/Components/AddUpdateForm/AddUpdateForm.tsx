@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import type { User } from '../../assets/Interfaces/Interfaces';
 
-export default function AddUpdateForm(props) {
+export default function AddUpdateForm(props:any) {
     let navigate = useNavigate();
     let [isBtnDisabled,setIsBtnDisabled] = useState(true)
     let{title,user}=props;
@@ -19,15 +20,12 @@ export default function AddUpdateForm(props) {
 
 
     useEffect(() => {
-    console.log(title, "title");
 
     if (title == "profile") {
       setIsProfileMode(true);
-        console.log("profile",isProfileMode)
 
     } else {
       setIsProfileMode(false);
-        console.log("profile",setIsProfileMode)
 
     }
   }, [title]);
@@ -40,6 +38,7 @@ export default function AddUpdateForm(props) {
 
     useEffect(() => {
           setcurrentuser(user);  
+          console.log(currentuser)
         }, [user]);
 
         let{register,
@@ -49,14 +48,11 @@ export default function AddUpdateForm(props) {
             }=useForm({defaultValues: user});
         
 
-    let onSubmit = async(data)=>{
-        let response = "";
-        console.log(title)
+    let onSubmit = async(data:User)=>{
         if(title =="add User")
         {
-            console.log("add user")
              try{
-              let response = await axios.post(`https://dummyjson.com/users/add`,data);
+               await axios.post(`https://dummyjson.com/users/add`,data);
               toast.success("user added successfuly")
               navigate("/dashboard/userlist")
               
@@ -70,18 +66,15 @@ export default function AddUpdateForm(props) {
             }
         }
         else if(title == "update User"){
-            console.log("update user")
 
             try{
-                 console.log(user,user.id)
                 try{
                    
-                    let response = await axios.put(`https://dummyjson.com/users/${user.id}`,user);
+                    await axios.put(`https://dummyjson.com/users/${user.id}`,user);
                     toast.success("user updated successfuly")
                     navigate("/dashboard/userlist")
                 }
                 catch(error){
-                    console.log(error)
                     toast.error("sorry ! faild to update")
                 }
                
@@ -102,7 +95,7 @@ export default function AddUpdateForm(props) {
   if (user) {
     reset({
       ...user,
-      birthDate: formatDateForInput(user.birthDate), // نضمن التاريخ يبقى بصيغة صحيحة
+      birthDate: formatDateForInput(user?.birthDate), // نضمن التاريخ يبقى بصيغة صحيحة
     });
   }
 }, [user, reset]);
@@ -133,7 +126,7 @@ export default function AddUpdateForm(props) {
               setIsBtnDisabled(false);
             }}
                 )}/>
-                {errors.firstName&&<span className='text-danger'>{errors.firstName.message}</span>}
+                {errors.firstName&&<span className='text-danger'>{errors?.firstName?.message  as string}</span>}
             </div>
              <div className="col-md-6">
                 <label htmlFor="lastName" >lastName</label>
@@ -147,12 +140,11 @@ export default function AddUpdateForm(props) {
                  pattern:{value:/^[A-Za-z]{2,}$/,message:"enter char only , at least 3 char"},
                 onChange:(e) => {
               setcurrentuser({ ...user, lastName: e.target.value });
-              console.log(currentuser,"setcurrentuser")
               setIsBtnDisabled(false);
             } 
                 })}
                 />
-                {errors.lastName && <span className='text-danger'>{errors.lastName.message}</span>}
+                {errors.lastName && <span className='text-danger'>{errors?.lastName?.message  as string}</span>}
             </div>
         </div>
          <div className="row my-4">
@@ -175,7 +167,7 @@ export default function AddUpdateForm(props) {
                               }
                 })}
                 />
-                {errors.email && <span className='text-danger'>{errors.email.message}</span>}
+                {errors.email && <span className='text-danger'>{errors?.email?.message  as string}</span>}
             </div>
              <div className="col-md-6">
                 <label htmlFor="Age" >Age</label>
@@ -191,7 +183,7 @@ export default function AddUpdateForm(props) {
                                 setIsBtnDisabled(false);
                               }})}
                 />
-                {errors.age&&<span className='text-danger'>{errors.age.message}</span>}
+                {errors.age&&<span className='text-danger'>{errors?.age?.message  as string}</span>}
                  
             </div>
         </div>
@@ -211,7 +203,7 @@ export default function AddUpdateForm(props) {
                    })
                   }
                 />
-                {errors.phone&&<span className='text-danger'> {errors.phone.message}</span>}
+                {errors.phone&&<span className='text-danger'> {errors?.phone?.message  as string}</span>}
             </div>
              <div className="col-md-6">
                 <label  htmlFor="BD">Birthdate</label>
@@ -226,7 +218,7 @@ export default function AddUpdateForm(props) {
                             }
                 })}
                 defaultValue={formatDateForInput(user?.birthDate)}                />
-                {errors.birthDate&&<span className='text-danger'>{errors.birthDate.message}</span>}
+                {errors.birthDate&&<span className='text-danger'>{errors?.birthDate?.message  as string}</span>}
             </div>
         </div>
         <div className='text-center'>

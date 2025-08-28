@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 
 import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import AuthLayOut from './Components/AuthLayout/AuthLayOut'
+import AuthLayOut from './Components/AuthLayout/AuthLayout'
 import Login from './Components/Login/Login'
 import MasterLayout from './Components/MasterLayout/MasterLayout'
 import Home from './Components/Home/Home'
@@ -16,10 +16,11 @@ import { UserContext } from './Context/UserContext'
 
 function App() {
 const {saveUserData} = useContext(UserContext);
-  
+
 useEffect(() => {
     localStorage.getItem("userToken") !== null ? saveUserData() : null
   }, [])
+  
 
 
   const routes = createBrowserRouter([

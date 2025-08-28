@@ -1,13 +1,14 @@
 import axios from 'axios';
-import React, { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { UserContext } from '../../Context/UserContext';
 
 
+
 export default function Login() {
-  let {saveUserData} = useContext(UserContext)
+let {saveUserData} = useContext(UserContext)
 
   interface LoginFormInputs{
       username:string;
@@ -16,8 +17,13 @@ export default function Login() {
   let {register,handleSubmit,formState:{errors}}=useForm<LoginFormInputs>();
   let navigate = useNavigate()
   
-  const notify = () => toast('Wow so easy !');
 
+  let isUserToken  = localStorage.getItem("userToken")
+   useEffect(() => {
+    if (isUserToken) {
+      navigate("/dashboard");
+    }
+  }, [])
   let onSubmit=async(data:LoginFormInputs)=>{
 
     try{
@@ -25,13 +31,11 @@ export default function Login() {
       let response = await axios.post('https://dummyjson.com/auth/login',data)
       localStorage.setItem("userToken",response?.data?.accessToken)
       toast.success("login Success")
-      localStorage.setItem("userToken",response.data.accessToken)
       saveUserData()
       navigate("/dashboard")
     }
     catch(error){
       toast.error("sorry! login faild")
-      console.log(error)
     }
   }
   
@@ -52,7 +56,7 @@ export default function Login() {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-group my-3">
                   <label htmlFor="userName" >user Name</label>
-                  <input id="userName" type="text" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username"
+                  <input id="userName" type="text" className="form-control" aria-describedby="emailHelp" placeholder="Enter username"
 
                   {...register("username",{required:"user name is requird!"})}
                   />
@@ -62,7 +66,7 @@ export default function Login() {
                 </div>
                 <div className="form-group">
                   <label htmlFor="password">Password</label>
-                  <input id="password" type="text" className="form-control" id="exampleInputPassword1" placeholder="Password"
+                  <input id="password" type="text" className="form-control" placeholder="Password"
 
                   {...register("password",{required:"password is required!"})}
                   />

@@ -12,10 +12,10 @@ import App from './App.tsx'
 import {  UserProvider } from './Context/UserContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
+   <StrictMode>
     <UserProvider>
       <App />
     </UserProvider>
     
-  </StrictMode>,
+   </StrictMode>,
 )

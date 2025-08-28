@@ -1,12 +1,11 @@
-import React, { useContext } from 'react'
-import { useLocation } from 'react-router-dom';
+import  { useContext } from 'react'
 import AddUpdateForm from '../AddUpdateForm/AddUpdateForm';
 import { UserContext } from '../../Context/UserContext';
 
 export default function Profile() {
+  
   let {userData} = useContext(UserContext)
-  console.log(userData?.firstName,"profile")
-
+console.log(userData,"profileeee")
 
 
   return (
